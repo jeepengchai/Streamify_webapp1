@@ -134,7 +134,7 @@ Follow the steps under the **Installation Kit** section to set up the applicatio
 
 ## 🌐 Live Project
 
-You can access the live version of Streamify here: [https://streamify-webapp1.onrender.com/](https://streamify-webapp1.onrender.com/)
+You can access the live version of Streamify here: [https://streamify-webapp1.onrender.com/](https://streamify-webapp1.onrender.com/) (Expired: June 24, 2025 at 4:10 PM)
 
 ---
 
