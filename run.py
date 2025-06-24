@@ -1,4 +1,5 @@
 # run.py
+import os
 from movie_webapp import create_app # Import the create_app function from your package
 
 app = create_app()
