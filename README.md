@@ -128,3 +128,16 @@ Follow the steps under the **Installation Kit** section to set up the applicatio
 - **Login issues**: Verify correct credentials or re-register.
 - **No recommendations**: Make sure you've rated at least one movie.
 - **404 Errors**: Confirm the app is running and you're using the right URLs.
+
+
+---
+
+## 🌐 Live Project
+
+You can access the live version of Streamify here: [https://streamify-webapp1.onrender.com/](https://streamify-webapp1.onrender.com/)
+
+---
+
+## ✍️ Author
+
+**Jee Peng Chai (79639)**
