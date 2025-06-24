@@ -1,0 +1,36 @@
+{# movie_webapp/templates/signup.html #}
+{% extends "base.html" %}
+{% block content %}
+    <div class="auth-form-container">
+        <h2>Sign Up</h2>
+        <form method="POST">
+            {{ form.hidden_tag() }} {# Include CSRF token #}
+            <div>
+                {{ form.username.label }}<br>
+                {{ form.username(class="form-input", placeholder="Username") }} {# Added class and placeholder #}
+                {% for error in form.username.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.password.label }}<br>
+                {{ form.password(class="form-input", placeholder="Password") }} {# Added class and placeholder #}
+                {% for error in form.password.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+             <div>
+                {{ form.confirm_password.label }}<br>
+                {{ form.confirm_password(class="form-input", placeholder="Confirm Password") }} {# Added class and placeholder #}
+                {% for error in form.confirm_password.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.submit(class="form-submit-button") }} {# Added class to submit button #}
+            </div>
+        </form>
+        {# Updated text #}
+        <p class="auth-links">Already have an account? <a href="{{ url_for('routes.login') }}">Log In</a></p>
+    </div>
+{% endblock %}

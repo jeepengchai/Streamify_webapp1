@@ -1,0 +1,43 @@
+{# movie_webapp/templates/rated_movies.html #}
+{% extends "base.html" %}
+{% block content %}
+    <h2>Your Rated Movies</h2>
+
+    {% if rated_movies %}
+        <div class="movie-list rated-list"> {# Reusing movie-list class, adding rated-list for specific styles #}
+            {% for movie_entry in rated_movies %}
+                <div class="movie-item rated-item"> {# Reusing movie-item class, adding rated-item #}
+                    {# Link to the movie detail page #}
+                    <a href="{{ url_for('routes.movie_detail', tmdb_id=movie_entry.movie_id) }}">
+                         {# Display poster or placeholder #}
+                        {% if movie_entry.poster_url %}
+                            <img src="{{ movie_entry.poster_url }}" alt="{{ movie_entry.title }} Poster">
+                        {% else %}
+                            <div class="no-poster">No Poster Available</div>
+                        {% endif %}
+                        {# Display title #}
+                        <h3>{{ movie_entry.title }}</h3>
+                    </a>
+                    {# Display Rating and Timestamp #}
+                    <div class="rated-info">
+                        <p>Your rating: <strong>{{ movie_entry.user_rating }}</strong></p>
+                        {% if movie_entry.timestamp %}
+                             <p class="rating-timestamp">
+                                Rated: {{ movie_entry.timestamp.strftime('%Y-%m-%d %H:%M') }} UTC
+                             </p>
+                        {% endif %}
+
+                        {# Delete Rating Form/Button for this specific rating #}
+                        {# **SECURITY WARNING:** This form does NOT use CSRF protection #}
+                        <form method="POST" action="{{ url_for('routes.delete_rating_by_id', rating_id=movie_entry.rating_id) }}">
+                            <button type="submit" class="delete-button small-button">Delete</button> {# Added small-button class #}
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You haven't rated any movies yet.</p>
+        <p><a href="{{ url_for('routes.movies') }}">Explore Top Rated Movies</a> to find something to rate!</p>
+    {% endif %}
+{% endblock %}

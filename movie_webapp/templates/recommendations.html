@@ -1,0 +1,93 @@
+{# movie_webapp/templates/recommendations.html #}
+{% extends "base.html" %}
+{% block content %}
+    <h2>Recommended Movies</h2>
+
+    {# Use the has_ratings flag to control the initial message #}
+    {% if not has_ratings %}
+        {# User has no ratings - show message prompting them to rate #}
+        <p>You haven't rated any movies yet.</p>
+        <p>Please rate a few movies to get personalized recommendations!</p>
+        {# Optional: Include links to movies to make it easy for them to start rating #}
+        <p><a href="{{ url_for('routes.movies') }}">Explore Top Rated Movies</a> or <a href="{{ url_for('routes.upcoming_movies') }}">Upcoming Movies</a>.</p>
+
+    {# Check if recommendations were found (this block now runs ONLY if has_ratings is True) #}
+    {% elif top5_recommendations or other_recommendations %}
+        {# User has ratings AND recommendations were found (either top5 or other) #}
+
+        {# --- Section for Top 5 Recommendations --- #}
+        {% if top5_recommendations %}
+            <h3>Top 5 Recommendations</h3>
+            {# Use the general movie-list grid class #}
+            <div class="movie-list">
+                {% for movie in top5_recommendations %}
+                    {# Use the general movie-item style #}
+                    {# Added class 'top5-item' to specifically target these items for positioning #}
+                    <div class="movie-item top5-item">
+                        {# Add the numbering element #}
+                        <span class="recommendation-number">{{ loop.index }}</span>
+
+                        {# Link to the movie detail page #}
+                        <a href="{{ url_for('routes.movie_detail', tmdb_id=movie.id) }}">
+                            {# Display poster or placeholder #}
+                            {% if movie.poster_url %}
+                                <img src="{{ movie.poster_url }}" alt="{{ movie.title }} Poster">
+                            {% else %}
+                                 <div class="no-poster">No Poster Available</div>
+                            {% endif %}
+                            {# Display title #}
+                            <h3>{{ movie.title }}</h3>
+                        </a>
+                        {# Display the predicted score as a percentage if it exists #}
+                        {# Multiply by 100 and round, then add the '%' sign #}
+                        {% if movie.predicted_score is not none %}
+                            <p class="predicted-score">User Score: <strong>{{ (movie.predicted_score * 100) | round(2) }}%</strong></p> {# Display score as percentage rounded to 2 decimal places #}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <hr> {# Optional separator line #}
+        {% endif %}
+        {# --- End Top 5 Section --- #}
+
+        {# --- Section for Other Recommendations --- #}
+        {% if other_recommendations %}
+            <h3>Other Recommended Movies</h3>
+            {# Use the general movie-list grid class #}
+            <div class="movie-list">
+                {% for movie in other_recommendations %}
+                    {# Use the general movie-item style #}
+                    <div class="movie-item"> {# No specific styling needed here as the number isn't added #}
+                        {# Link to the movie detail page #}
+                        <a href="{{ url_for('routes.movie_detail', tmdb_id=movie.id) }}">
+                            {# Display poster or placeholder #}
+                            {% if movie.poster_url %}
+                                <img src="{{ movie.poster_url }}" alt="{{ movie.title }} Poster">
+                            {% else %}
+                                 <div class="no-poster">No Poster Available</div>
+                            {% endif %}
+                            {# Display title #}
+                            <h3>{{ movie.title }}</h3>
+                        </a>
+                         {# Display the predicted score as a percentage if it exists #}
+                        {% if movie.predicted_score is not none %}
+                            <p class="predicted-score">Relevance: <strong>{{ (movie.predicted_score * 100) | round(2) }}%</strong></p> {# Display score as percentage rounded to 2 decimal places #}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {# --- End Other Recommendations Section --- #}
+
+    {% else %}
+        {# User has ratings, but no recommendations were found by the recommender #}
+        <p>No personalized recommendations available at this time.</p>
+        <p>Try rating a few more movies to help us learn your preferences!</p>
+        {# Optional: Keep links to explore other movies #}
+        <p><a href="{{ url_for('routes.movies') }}">Explore Top Rated Movies</a> or <a href="{{ url_for('routes.upcoming_movies') }}">Upcoming Movies</a>.</p>
+
+    {% endif %}
+
+    {# No pagination needed for recommendations list #}
+
+{% endblock %}

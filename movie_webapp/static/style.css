@@ -1,0 +1,954 @@
+/* movie_webapp/static/style.css */
+
+/* --- General Body and Layout --- */
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom right, #a8edea, #fed6e3); /* Example gradient */
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    margin: 0;
+    padding: 0 10px;
+}
+
+nav ul {
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Allow nav items to wrap on smaller screens */
+    align-items: center; /* Vertically align items in the flex container */
+}
+
+nav ul li {
+    margin: 0 10px;
+    padding: 5px 0;
+    border-bottom: 2px solid transparent;
+    transition: border-bottom-color 0.3s ease;
+    display: flex; /* Use flex to vertically center content like the search form */
+    align-items: center;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+nav a:hover {
+    color: #ddd;
+}
+
+/* --- Active Nav Link Style --- */
+nav ul li.active {
+    border-bottom-color: #007bff;
+}
+
+nav ul li.active a {
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* --- Search Form Styles (in Header) --- */
+/* Style the list item containing the search form */
+nav ul li.search-item {
+    /* Adjust margin as needed to fit with other nav items */
+    margin: 0 10px; /* Keep consistent with other li margin */
+    padding: 0; /* Remove padding from li, let form handle it */
+    border-bottom: none; /* Ensure no border-bottom under the search form */
+}
+
+/* Style the form itself */
+.search-form {
+    display: flex; /* Arrange input and button side-by-side */
+    align-items: center; /* Vertically align input and button */
+    gap: 5px; /* Space between input and button */
+    margin: 0; /* Remove default form margin */
+    padding: 0;
+}
+
+/* Style the search input field */
+.search-input {
+    padding: 5px 10px; /* Adjust padding */
+    border: 1px solid #ccc; /* Standard border */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 0.9em; /* Smaller font size to fit in header */
+    width: 150px; /* Set a fixed width, adjust as needed */
+    box-sizing: border-box; /* Include padding and border in element's total width */
+    transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+     border-color: #007bff; /* Highlight on focus */
+     outline: none; /* Remove default outline */
+}
+
+/* Style the search button */
+.search-button {
+    padding: 5px 10px; /* Adjust padding */
+    border: none;
+    border-radius: 4px; /* Rounded corners */
+    background-color: #007bff; /* Primary button color */
+    color: white;
+    cursor: pointer;
+    font-size: 0.9em; /* Match input font size */
+    transition: background-color 0.3s ease;
+    /* Adjust margin if needed, e.g., margin-left: 5px; */
+}
+
+.search-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* --- End Search Form Styles --- */
+
+
+main {
+    flex-grow: 1;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px 20px 20px;
+    border-radius: 8px;
+}
+
+h2 {
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    margin-top: 0;
+}
+
+/* --- Forms (General WTForms - might be overridden by specific classes) --- */
+form div {
+    margin-bottom: 15px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form div input[type="text"],
+form div input[type="password"],
+form div select {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+form input[type="submit"] {
+    background-color: #5cb85c;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+form input[type="submit"]:hover {
+    background-color: #4cae4c;
+}
+
+/* --- Flash messages --- */
+.flashes {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.flashes li {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.flashes .success {
+    background-color: #dff0d8;
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+}
+
+.flashes .danger {
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
+
+.flashes .info {
+    background-color: #d9edf7;
+    color: #31708f;
+    border: 1px solid #bce8f1;
+}
+
+.flashes .warning {
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+    border: 1px solid #faebcc;
+}
+
+
+/* --- Auth Form Container (Login/Signup/Index Welcome) --- */
+.auth-form-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    text-align: center;
+}
+
+.auth-form-container h2 {
+    color: #2ecc71;
+    border-bottom: none;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 0;
+}
+
+.auth-form-container form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.auth-form-container form div input[type="text"],
+.auth-form-container form div input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 0;
+}
+
+.auth-form-container form label {
+    display: none;
+}
+
+.auth-form-container .show-password-checkbox {
+    margin-top: -10px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.auth-form-container .show-password-checkbox label {
+    display: inline;
+    font-weight: normal;
+    font-size: 0.9em;
+    color: #555;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.auth-form-container form input[type="submit"] {
+    background-color: #2ecc71;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+    width: auto;
+    min-width: 150px;
+    margin-top: 10px;
+}
+
+.auth-form-container form input[type="submit"]:hover {
+    background-color: #27ae60;
+}
+
+.auth-form-container p.auth-links {
+    text-align: center;
+    font-size: 0.9em;
+    margin-top: 20px;
+    color: #666;
+}
+
+.auth-form-container p.auth-links a {
+    color: #2ecc71;
+    text-decoration: none;
+}
+
+.auth-form-container p.auth-links a:hover {
+    text-decoration: underline;
+}
+
+
+/* --- Movie List (Full grid) --- */
+.movie-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.movie-list h2 {
+    grid-column: 1 / -1;
+    margin-top: 0;
+}
+
+@media (max-width: 1200px) {
+    .movie-list {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+        max-width: 100%;
+    }
+}
+@media (max-width: 992px) {
+    .movie-list {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 15px;
+    }
+     .movie-item img, .movie-item .no-poster {
+         height: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .movie-list {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+        padding: 10px;
+    }
+     .movie-item img, .movie-item .no-poster {
+         height: 170px;
+    }
+}
+
+.movie-item {
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 8px;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.movie-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.movie-item a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex-grow: 1;
+}
+
+.movie-item img {
+    max-width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.movie-item .no-poster {
+    width: 100%;
+    height: 280px;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 0.9em;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.movie-item h3 {
+    font-size: 0.9em;
+    margin: 0;
+    margin-top: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-bottom: 5px;
+    flex-shrink: 0;
+}
+
+/* Specific style for predicted score in movie item */
+.movie-item .predicted-score {
+    font-size: 0.8em; /* Smaller font */
+    color: #555; /* Slightly muted color */
+    margin: 5px 0 0 0; /* Small top margin, no other margins */
+    padding: 0;
+    text-align: center; /* Ensure score is centered if item is narrow */
+}
+
+.movie-item .predicted-score strong {
+     color: #007bff; /* Highlight the score number */
+}
+
+/* --- Styles for Recommendation Numbers (Top 5 section) --- */
+/* Target only the movie items within the 'Top 5 Recommendations' list */
+.movie-list .top5-item {
+     /* Ensure relative positioning is set for the number to be absolute within it */
+     position: relative;
+     /* Add some padding at the top to prevent content from being hidden by the number */
+     /* Adjust this based on the desired size of the number and its top margin */
+     padding-top: 25px; /* Added padding */
+}
+
+/* Style the number element itself */
+.recommendation-number {
+    position: absolute;
+    top: 5px; /* Distance from the top */
+    left: 5px; /* Distance from the left */
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+    color: white; /* White text color */
+    padding: 2px 8px; /* Padding inside the span */
+    border-radius: 4px; /* Slightly rounded corners */
+    font-size: 1em; /* Adjust font size */
+    font-weight: bold; /* Make the number bold */
+    z-index: 10; /* Ensure it's above the poster image */
+    line-height: 1; /* Prevent extra space below text */
+}
+
+ /* Adjust image margin and no-poster margin if needed to avoid collision with number */
+ /* Target images/no-posters only within the 'top5-item' to avoid affecting other lists */
+ .movie-list .top5-item img,
+ .movie-list .top5-item .no-poster {
+     margin-top: -25px; /* Counteract the padding-top on the container */
+     /* Ensure display: block; is already set in the general .movie-item img rule */
+ }
+
+/* --- Pagination --- */
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.pagination a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+.pagination a:hover {
+    color: #0056b3;
+}
+
+
+/* --- Movie Detail Page --- */
+.movie-detail .detail-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding-bottom: 20px;
+}
+
+.movie-detail .detail-poster {
+    flex: 1 1 250px;
+    max-width: 350px;
+    text-align: center;
+}
+
+.movie-detail .detail-poster img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.movie-detail .detail-poster .no-poster {
+     width: 100%;
+     height: 450px;
+     background-color: #ccc;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: #666;
+     font-size: 1em;
+     border-radius: 8px;
+}
+
+.movie-detail .detail-info {
+    flex: 2 1 400px;
+}
+
+.detail-info p {
+    margin-bottom: 15px;
+}
+.detail-info p strong {
+     color: #555;
+}
+
+
+/* Rating Feature Styles (in Movie Detail) */
+.detail-info h3, .detail-info h4 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    border-bottom: none;
+    color: #007bff;
+}
+
+/* Forms inside detail-info for rating submission */
+.detail-info form {
+     margin-top: 10px;
+     margin-bottom: 15px;
+}
+
+/* Select element within detail-info form */
+.detail-info form select {
+     width: auto;
+     margin-right: 10px;
+     padding: 8px;
+     font-size: 0.9em;
+     border: 1px solid #ccc;
+     border-radius: 4px;
+}
+
+
+/* Submit button within detail-info form */
+.detail-info form button[type="submit"] {
+     background-color: #007bff;
+     color: white;
+     padding: 8px 15px;
+     border: none;
+     border-radius: 4px;
+     cursor: pointer;
+     font-size: 0.9em;
+     transition: background-color 0.3s ease;
+     width: auto;
+}
+
+.detail-info form button[type="submit"]:hover {
+     background-color: #0056b3;
+}
+
+/* Style for the delete button (on Movie Detail page) */
+.detail-info .delete-button {
+    background-color: #d9534f;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+    width: auto;
+}
+
+.detail-info .delete-button:hover {
+    background-color: #c9302c;
+}
+
+/* Style for timestamp display (in Movie Detail) */
+.detail-info p.rating-timestamp {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* --- Star Rating Specific Styles --- */
+.star-rating {
+    display: inline-block;
+    font-size: 1.8em;
+    color: #ccc;
+    cursor: pointer;
+    unicode-bidi: bidi-override;
+    direction: ltr;
+    text-align: left;
+    padding: 0;
+    margin-right: 15px;
+}
+
+.star-rating .star {
+    display: inline-block;
+     margin-right: 2px;
+     transition: color 0.2s ease;
+}
+
+.star-rating .star.filled {
+    color: gold;
+}
+
+.star-rating .star.hover-filled {
+    color: orange;
+}
+
+
+/* --- Cast List Section Styles (Movie Detail) --- */
+.movie-cast {
+    margin-top: 30px;
+}
+
+.movie-cast h3 {
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.cast-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.cast-item {
+    flex: 0 0 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.cast-item img {
+    width: 80px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.no-profile-photo {
+     width: 80px;
+     height: 120px;
+     background-color: #ccc;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: #666;
+     font-size: 0.7em;
+     border-radius: 4px;
+     margin-bottom: 5px;
+     text-align: center;
+}
+
+
+.cast-item p {
+    margin: 0;
+    line-height: 1.3;
+}
+
+.cast-item p strong {
+     display: block;
+     font-weight: bold;
+     color: #333;
+     margin-bottom: 2px;
+}
+
+/* --- Rated Movies List Page Specific Styles --- */
+/* Reusing .movie-list and .movie-item structure */
+
+.rated-list .rated-item {
+     height: auto;
+     padding-bottom: 5px;
+}
+
+.rated-list .rated-item a {
+     flex-grow: 0;
+     display: block;
+     margin-bottom: 5px;
+}
+
+.rated-info {
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px solid #eee;
+    text-align: left;
+    width: 100%;
+    font-size: 0.9em;
+    flex-shrink: 0;
+}
+
+.rated-info p {
+    margin: 0 0 3px 0;
+}
+
+.rated-info p strong {
+    color: #007bff;
+    font-size: 1em;
+}
+
+.rated-info .rating-timestamp {
+    font-size: 0.75em;
+    color: #888;
+    display: block;
+    margin-bottom: 8px;
+    margin-left: 0;
+}
+
+/* Delete button on the Rated Movies list page */
+.rated-info form {
+    margin-top: 5px;
+    margin-bottom: 0;
+    text-align: center;
+    display: block;
+}
+
+/* Style for the delete button (reusing class, adding size variant) */
+/* .delete-button { ... defined above ... } */
+
+.small-button {
+    padding: 4px 8px;
+    font-size: 0.75em;
+}
+
+
+/* --- Horizontal Scroll Sections (Homepage previews) --- */
+
+.movie-section {
+    margin: 40px auto;
+    max-width: 1400px;
+    padding: 0 20px;
+}
+
+.section-title {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.section-title a.section-link {
+    font-size: 0.9em;
+    text-decoration: none;
+    color: #007bff;
+    margin-left: 15px;
+    flex-shrink: 0;
+}
+
+.section-title a.section-link:hover {
+    text-decoration: underline;
+}
+
+
+.scroll-container-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.horizontal-scroll-container {
+    flex-grow: 1;
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 10px;
+    gap: 10px;
+    /* Hide default scrollbar if desired */
+    /* &::-webkit-scrollbar { display: none; } */
+    /* -ms-overflow-style: none; */
+    /* scrollbar-width: none; */
+}
+
+.movie-item-horizontal {
+    flex: 0 0 150px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 8px;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.movie-item-horizontal:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.movie-item-horizontal a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex-grow: 1;
+}
+
+
+.movie-item-horizontal img {
+    max-width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.no-poster-horizontal {
+    width: 100%;
+    height: 220px;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 0.8em;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+
+.movie-item-horizontal h4 {
+    font-size: 0.85em;
+    margin: 0;
+    margin-top: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-bottom: 0;
+    flex-shrink: 0;
+}
+
+/* Scroll Arrows */
+.scroll-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 1.2em;
+    line-height: 1;
+    text-align: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.3s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    display: block;
+}
+
+.scroll-arrow:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.left-arrow {
+    left: 5px;
+}
+
+.right-arrow {
+    right: 5px;
+}
+
+/* Optional: Style for when arrows are disabled */
+.scroll-arrow:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* --- Footer --- */
+footer {
+    flex-shrink: 0;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 40px;
+    color: #666;
+    font-size: 0.9em;
+    background-color: #eee;
+}
+
+.movie-trailers {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.movie-trailers h3 {
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* --- Responsive Embed Container --- */
+.trailer-embed-container {
+   position: relative;
+   padding-bottom: 56.25%; /* 16:9 aspect ratio */
+   height: 0;
+   overflow: hidden;
+   max-width: 100%;
+   background: #000;
+   margin-bottom: 20px;
+}
+
+.trailer-embed-container iframe {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+}
+/* ---------------------------------- */
+
+
+.trailer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.trailer-list li {
+    margin-bottom: 10px;
+}
+
+.trailer-list li a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 1em;
+    transition: text-decoration 0.3s ease;
+}
+
+.trailer-list li a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,188 @@
+{# movie_webapp/templates/movie_detail.html #}
+{% extends "base.html" %}
+{% block content %}
+    <div class="movie-detail">
+        <h2>{{ movie.title }}</h2>
+        <div class="detail-content">
+            <div class="detail-poster">
+                 {% if movie.poster_url %}
+                    <img src="{{ movie.poster_url }}" alt="{{ movie.title }} Poster">
+                {% else %}
+                     <div class="no-poster">No Poster Available</div>
+                {% endif %}
+            </div>
+            <div class="detail-info">
+                <p><strong>Release Date:</strong> {{ movie.release_date or 'N/A' }}</p>
+                <p><strong>Rating:</strong> {{ movie.vote_average or 'N/A' }} / 10</p>
+                <p><strong>Genres:</strong>
+                    {% if movie.genres %}
+                        {{ movie.genres | map(attribute='name') | join(', ') }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </p>
+                <p><strong>Overview:</strong> {{ movie.overview or 'No overview available.' }}</p>
+
+                {# --- Rating Feature --- #}
+                <h3>Your Rating</h3>
+                {% if user_rating is not none %}
+                    <p>You rated this movie: <strong>{{ user_rating.rating }}</strong></p>
+                    {% if user_rating.timestamp %}
+                         <p class="rating-timestamp">
+                            Rated on: {{ user_rating.timestamp.strftime('%Y-%m-%d %H:%M:%S') }} UTC
+                         </p>
+                    {% endif %}
+                    {# Delete Rating Form/Button - Only show if a rating exists #}
+                    {# **SECURITY WARNING:** This form does NOT use CSRF protection #}
+                    <form id="delete-rating-form" method="POST" action="{{ url_for('routes.delete_rating_from_detail', tmdb_id=movie.id) }}" style="display: inline-block; margin-left: 10px;">
+                        <button type="submit" class="delete-button">Delete Rating</button>
+                    </form>
+                {% else %}
+                    <p>You have not rated this movie yet.</p>
+                {% endif %}
+
+                <h4>Rate this movie (1-5):</h4>
+                 {# Star Rating Form #}
+                 {# **SECURITY WARNING:** This form does NOT use CSRF protection #}
+                <form id="star-rating-form" method="POST" action="{{ url_for('routes.rate_movie', tmdb_id=movie.id) }}" style="display: inline-block;">
+                    <div class="star-rating" data-current-rating="{{ user_rating.rating if user_rating is not none else 0 }}">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                    <input type="hidden" name="rating" id="hidden_rating" value="{{ user_rating.rating if user_rating is not none else 0 }}">
+                     <button type="submit">Submit Rating</button>
+                </form>
+                {# --- End Rating Feature --- #}
+
+            </div>
+        </div>
+
+        {# --- Trailers Section --- #}
+        <div class="movie-trailers">
+            <h3>Trailers</h3>
+            {# Check if a primary trailer was found #}
+            {% if primary_trailer %}
+                {# Container for the embedded video to make it responsive #}
+                <div class="trailer-embed-container">
+                    {# Use an iframe to embed the YouTube video #}
+                    <iframe
+                        src="https://www.youtube.com/embed/{{ primary_trailer.key }}" {# Use the 'key' property for the YouTube embed URL #}
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen {# Allows fullscreen viewing #}
+                        title="{{ primary_trailer.name }}" {# Use the video 'name' as the title #}
+                    ></iframe>
+                </div>
+
+                {# Removed the list of other trailers #}
+
+            {% else %}
+                {# Fallback message if no trailers were found #}
+                <p>Trailer information not available.</p>
+            {% endif %}
+        </div>
+        {# --- End Trailers Section --- #}
+
+
+        {# --- Cast List Section --- #}
+        <div class="movie-cast">
+            <h3>Cast</h3>
+            {% if cast_list %}
+                <div class="cast-list">
+                    {% for actor in cast_list %}
+                        <div class="cast-item">
+                            {# Using get_image_url with a smaller size for profile pictures #}
+                            {% set profile_url = get_image_url(actor.profile_path, size='w185') %}
+                            {% if profile_url %}
+                                <img src="{{ profile_url }}" alt="{{ actor.name }} Profile">
+                            {% else %}
+                                <div class="no-profile-photo">No Photo</div>
+                            {% endif %}
+                            <p><strong>{{ actor.name }}</strong> as {{ actor.character }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Cast information not available.</p>
+            {% endif %}
+        </div>
+        {# --- End Cast List Section --- #}
+
+
+    </div>
+    <p><a href="{{ url_for('routes.movies') }}">Back to Top Movies</a></p>
+
+    {# --- JavaScript for Star Rating --- #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const starRatingDiv = document.querySelector('.star-rating');
+            if (!starRatingDiv) return;
+
+            const stars = starRatingDiv.querySelectorAll('.star');
+            const hiddenRatingInput = document.getElementById('hidden_rating');
+            const ratingForm = document.getElementById('star-rating-form');
+
+            let currentRating = parseFloat(starRatingDiv.dataset.currentRating) || 0;
+
+            function updateStars(ratingValue) {
+                stars.forEach(star => {
+                    const starRating = parseInt(star.dataset.rating);
+                    if (starRating <= ratingValue) {
+                        star.classList.add('filled');
+                    } else {
+                        star.classList.remove('filled');
+                    }
+                });
+            }
+
+            updateStars(currentRating);
+
+            starRatingDiv.addEventListener('mousemove', function(event) {
+                const rect = starRatingDiv.getBoundingClientRect();
+                const mouseX = event.clientX - rect.left;
+                const starWidth = stars[0].offsetWidth;
+                let hoveredRating = 0;
+                 for(let i=0; i < stars.length; i++) {
+                     if (mouseX > (stars[i].offsetLeft + stars[i].offsetWidth / 2)) {
+                         hoveredRating = i + 1;
+                     }
+                 }
+
+                const clampedRating = Math.max(0, Math.min(5, hoveredRating));
+
+                stars.forEach((star, index) => {
+                    if (index < clampedRating) {
+                        star.classList.add('hover-filled');
+                    } else {
+                         star.classList.remove('hover-filled');
+                    }
+                });
+                 stars.forEach(star => star.classList.remove('filled'));
+            });
+
+            starRatingDiv.addEventListener('mouseleave', function() {
+                stars.forEach(star => star.classList.remove('hover-filled'));
+                updateStars(currentRating);
+            });
+
+            starRatingDiv.addEventListener('click', function(event) {
+                let clickedStar = event.target.closest('.star');
+                if (clickedStar) {
+                    const selectedRating = parseInt(clickedStar.dataset.rating);
+                    currentRating = selectedRating;
+                    hiddenRatingInput.value = selectedRating.toFixed(1);
+                    updateStars(currentRating);
+                    stars.forEach(star => star.classList.remove('hover-filled'));
+
+                    // Optional: Auto-submit
+                    // ratingForm.submit();
+                }
+            });
+        });
+    </script>
+    {# --- End JavaScript --- #}
+
+{% endblock %}

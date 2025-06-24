@@ -1,0 +1,61 @@
+{# movie_webapp/templates/base.html #}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% if title %}{{ title }} - Streamify{% else %}Streamify{% endif %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Streamify</h1>
+        <nav>
+            <ul>
+                {# Use current_endpoint to highlight active page #}
+                {# Home button only for authenticated users #}
+                {% if current_user.is_authenticated %}
+                    <li {% if current_endpoint == 'routes.index' %}class="active"{% endif %}><a href="{{ url_for('routes.index') }}">Home</a></li> {# Home for authenticated users #}
+                    <li {% if current_endpoint == 'routes.movies' %}class="active"{% endif %}><a href="{{ url_for('routes.movies') }}">Top Rated Movies</a></li>
+                    <li {% if current_endpoint == 'routes.upcoming_movies' %}class="active"{% endif %}><a href="{{ url_for('routes.upcoming_movies') }}">Upcoming Movies</a></li>
+                    <li {% if current_endpoint == 'routes.rated_movies' %}class="active"{% endif %}><a href="{{ url_for('routes.rated_movies') }}">Your Ratings</a></li>
+                    {# Added link to Recommended Movies page #}
+                    <li {% if current_endpoint == 'routes.recommendations' %}class="active"{% endif %}><a href="{{ url_for('routes.recommendations') }}">Recommendations</a></li>
+                    {# Add a link to user dashboard later if needed #}
+                    <li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
+
+                    {# --- Search Form for Authenticated Users --- #}
+                    <li class="search-item">
+                        <form action="{{ url_for('routes.search') }}" method="get" class="search-form">
+                            <input type="text" name="query" placeholder="Search movies..." class="search-input" value="{{ request.args.get('query', '') }}">
+                            <button type="submit" class="search-button">Search</button>
+                        </form>
+                    </li>
+                    {# --- End Search Form --- #}
+
+                {% else %}
+                    {# Apply active class for non-authenticated links #}
+                    {# REMOVED the Home link from this block #}
+                    <li {% if current_endpoint == 'routes.login' %}class="active"{% endif %}><a href="{{ url_for('routes.login') }}">Login</a></li>
+                    <li {% if current_endpoint == 'routes.signup' %}class="active"{% endif %}><a href="{{ url_for('routes.signup') }}">Sign Up</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>© 2025 Streamify</p>
+    </footer>
+</body>
+</html>

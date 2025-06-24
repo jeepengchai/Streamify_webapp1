@@ -1,0 +1,126 @@
+{# movie_webapp/templates/index.html #}
+{% extends "base.html" %}
+{% block content %}
+
+    {% if current_user.is_authenticated %}
+        {# Auth Form Container for Welcome message #}
+        {# Removed homepage-content-wrapper and homepage-welcome-box class #}
+        <div class="auth-form-container">
+            <h2>Welcome {{ current_user.username }}</h2>
+        </div> {# End auth-form-container #}
+
+        {# --- Horizontal Scroll Section for Top Rated Movies --- #}
+        {# Removed homepage-movie-section class #}
+        <div class="movie-section">
+            <h3 class="section-title">Top Rated Movies <a href="{{ url_for('routes.movies') }}" class="section-link">View All ></a></h3>
+            <div class="scroll-container-wrapper">
+                <button class="scroll-arrow left-arrow"><</button>
+                <div class="horizontal-scroll-container movie-list-preview" data-scroll-amount="300">
+                    {% for movie in top_rated_preview %}
+                        <div class="movie-item-horizontal">
+                            <a href="{{ url_for('routes.movie_detail', tmdb_id=movie.id) }}">
+                                {% if movie.poster_url %}
+                                    <img src="{{ movie.poster_url }}" alt="{{ movie.title }} Poster">
+                                {% else %}
+                                     <div class="no-poster-horizontal">No Poster</div>
+                                {% endif %}
+                                <h4>{{ movie.title }}</h4>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+                 <button class="scroll-arrow right-arrow">></button>
+            </div>
+        </div>
+        {# --- End Top Rated Section --- #}
+
+        {# --- Horizontal Scroll Section for Upcoming Movies --- #}
+         {# This section remains outside any special wrappers #}
+         <div class="movie-section">
+            <h3 class="section-title">Upcoming Movies <a href="{{ url_for('routes.upcoming_movies') }}" class="section-link">View All ></a></h3>
+             <div class="scroll-container-wrapper">
+                <button class="scroll-arrow left-arrow"><</button>
+                <div class="horizontal-scroll-container movie-list-preview" data-scroll-amount="300">
+                    {% for movie in upcoming_preview %}
+                        <div class="movie-item-horizontal">
+                            <a href="{{ url_for('routes.movie_detail', tmdb_id=movie.id) }}">
+                                {% if movie.poster_url %}
+                                    <img src="{{ movie.poster_url }}" alt="{{ movie.title }} Poster">
+                                {% else %}
+                                     <div class="no-poster-horizontal">No Poster</div>
+                                {% endif %}
+                                <h4>{{ movie.title }}</h4>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="scroll-arrow right-arrow">></button>
+            </div>
+        </div>
+        {# --- End Upcoming Section --- #}
+
+
+    {% else %}
+        {# Auth Form Container for Welcome message when NOT logged in (no change needed here) #}
+         <div class="auth-form-container">
+            <h2>Welcome</h2>
+            <p>Please <a href="{{ url_for('routes.login') }}">log in</a> or <a href="{{ url_for('routes.signup') }}">sign up</a> to continue.</p>
+        </div>
+    {% endif %}
+
+    {# --- JavaScript for Horizontal Scrolling --- #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrollContainers = document.querySelectorAll('.horizontal-scroll-container');
+
+            scrollContainers.forEach(container => {
+                const wrapper = container.parentElement;
+                const leftArrow = wrapper.querySelector('.left-arrow');
+                const rightArrow = wrapper.querySelector('.right-arrow');
+
+                const scrollAmount = parseInt(container.dataset.scrollAmount) || 300;
+
+                leftArrow.addEventListener('click', function() {
+                    container.scrollBy({
+                        left: -scrollAmount,
+                        behavior: 'smooth'
+                    });
+                });
+
+                rightArrow.addEventListener('click', function() {
+                    container.scrollBy({
+                        left: scrollAmount,
+                        behavior: 'smooth'
+                    });
+                });
+
+                 // Optional: Hide/Show arrows based on scroll position
+                 // Add event listener for scroll
+                 container.addEventListener('scroll', function() {
+                     // Check if at the beginning (can't scroll left)
+                     if (container.scrollLeft === 0) {
+                         leftArrow.style.display = 'none';
+                     } else {
+                         leftArrow.style.display = 'block'; // Or 'flex' or 'grid' depending on button display
+                     }
+
+                     // Check if at the end (can't scroll right)
+                     const tolerance = 1; // Use a small tolerance
+                     if (container.scrollLeft + container.clientWidth >= container.scrollWidth - tolerance) {
+                         rightArrow.style.display = 'none';
+                     } else {
+                          rightArrow.style.display = 'block';
+                     }
+                 });
+
+                // Trigger scroll event once on load to set initial arrow state
+                setTimeout(() => {
+                    container.dispatchEvent(new Event('scroll'));
+                 }, 100);
+            });
+        });
+    </script>
+    {# --- End JavaScript --- #}
+
+
+{% endblock %}
